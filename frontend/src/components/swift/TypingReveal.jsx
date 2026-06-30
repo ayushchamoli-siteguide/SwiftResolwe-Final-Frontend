@@ -2,29 +2,32 @@ import React, { useEffect, useRef, useState } from "react";
 import { useInView, usePrefersReducedMotion } from "./hooks";
 
 /**
- * TypingReveal: renders full text (always readable). Animates a subtle
- * left-to-right reveal sweep on first scroll into view, then settles to
- * fully visible. Falls back to a plain fade under prefers-reduced-motion.
+ * TypingReveal: live typewriter effect that reveals text character by
+ * character (~1.6s total, regardless of length). Reserves final layout
+ * space (unrevealed characters are visibility:hidden) so containers do
+ * not reflow during reveal. Falls back to plain visible text under
+ * prefers-reduced-motion.
  */
 export default function TypingReveal({
   text,
   className = "",
-  duration = 1200,
+  duration = 1600,
   delay = 0,
   as: As = "p",
   caret = true,
 }) {
   const [ref, inView] = useInView({ threshold: 0.15, once: true });
-  const [progress, setProgress] = useState(0);
+  const [count, setCount] = useState(0);
   const [done, setDone] = useState(false);
   const reduced = usePrefersReducedMotion();
   const rafRef = useRef(null);
   const startRef = useRef(null);
+  const total = text ? text.length : 0;
 
   useEffect(() => {
-    if (!inView) return undefined;
+    if (!inView || !total) return undefined;
     if (reduced) {
-      setProgress(1);
+      setCount(total);
       setDone(true);
       return undefined;
     }
@@ -32,9 +35,13 @@ export default function TypingReveal({
       function tick(ts) {
         if (!startRef.current) startRef.current = ts;
         const p = Math.min(1, (ts - startRef.current) / duration);
-        setProgress(p);
+        const eased = 1 - Math.pow(1 - p, 2);
+        setCount(Math.floor(eased * total));
         if (p < 1) rafRef.current = requestAnimationFrame(tick);
-        else setDone(true);
+        else {
+          setCount(total);
+          setDone(true);
+        }
       }
       rafRef.current = requestAnimationFrame(tick);
     }, delay);
@@ -42,20 +49,19 @@ export default function TypingReveal({
       clearTimeout(wait);
       cancelAnimationFrame(rafRef.current);
     };
-  }, [inView, duration, delay, reduced]);
+  }, [inView, duration, delay, reduced, total]);
 
-  // Text is always rendered visible; the sweep is a thin cyan highlight that
-  // travels left to right, then disappears.
-  const sweepStyle = !done && inView && !reduced
-    ? {
-        position: "relative",
-        display: "inline",
-      }
-    : { display: "inline" };
+  const visible = text.slice(0, count);
+  const hidden = text.slice(count);
 
   return (
-    <As ref={ref} className={className} style={{ position: "relative" }}>
-      <span style={sweepStyle}>{text}</span>
+    <As
+      ref={ref}
+      className={className}
+      aria-label={text}
+      style={{ whiteSpace: "pre-wrap" }}
+    >
+      <span aria-hidden="true">{visible}</span>
       {caret && !done && inView && !reduced && (
         <span
           aria-hidden="true"
@@ -68,9 +74,13 @@ export default function TypingReveal({
             marginLeft: 2,
             verticalAlign: "-2px",
             animation: "caret-blink 1s infinite step-end",
-            opacity: 1 - progress * 0.3,
           }}
         />
+      )}
+      {!done && (
+        <span aria-hidden="true" style={{ visibility: "hidden" }}>
+          {hidden}
+        </span>
       )}
     </As>
   );

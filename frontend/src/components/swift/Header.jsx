@@ -12,6 +12,7 @@ const NAV = [
 ];
 
 export default function Header() {
+  const [showCta, setShowCta] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const { openSchedule } = useSwift();
@@ -24,6 +25,43 @@ export default function Header() {
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  // Show header CTA only AFTER the hero "Schedule a 30 mins Consultation"
+  // button has scrolled out of view (above the viewport).
+  useEffect(() => {
+    if (location.pathname !== "/") {
+      setShowCta(true);
+      return undefined;
+    }
+    let raf;
+    let target = null;
+    const check = () => {
+      target = document.querySelector('[data-testid="hero-schedule-cta"]');
+      if (!target) {
+        raf = requestAnimationFrame(check);
+      }
+    };
+    check();
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => {
+          // Visible -> hide header CTA. Out of view (above) -> show.
+          setShowCta(!e.isIntersecting);
+        });
+      },
+      { threshold: 0, rootMargin: "0px 0px -10px 0px" }
+    );
+    const attach = () => {
+      const el = document.querySelector('[data-testid="hero-schedule-cta"]');
+      if (el) io.observe(el);
+      else raf = requestAnimationFrame(attach);
+    };
+    attach();
+    return () => {
+      cancelAnimationFrame(raf);
+      io.disconnect();
+    };
+  }, [location.pathname]);
 
   const handleAnchor = (e, href) => {
     e.preventDefault();
@@ -82,7 +120,7 @@ export default function Header() {
             data-testid="schedule-consultation-btn"
             onClick={openSchedule}
             className={`cta-primary hidden md:inline-flex items-center px-4 py-2.5 rounded-full text-[14px] font-semibold transition-all ${
-              scrolled ? "opacity-100 translate-x-0" : "opacity-0 translate-x-2 pointer-events-none"
+              showCta ? "opacity-100 translate-x-0" : "opacity-0 translate-x-2 pointer-events-none"
             }`}
             style={{ transition: "opacity .3s ease, transform .3s ease, background .25s ease, box-shadow .25s ease" }}
           >

@@ -87,7 +87,14 @@ function TierCard({ tier, idx }) {
           <ShieldCheck size={12} />
           Legal Outcome and Enforceability
         </div>
-        <p className="text-[13px] leading-[1.6] text-[color:var(--text-primary)] text-left">{tier.outcome}</p>
+        <TypingReveal
+          text={tier.outcome}
+          as="p"
+          className="text-[13px] leading-[1.6] text-[color:var(--text-primary)] text-left"
+          delay={idx * 250 + 400}
+          duration={1700}
+          caret={false}
+        />
       </div>
     </div>
   );

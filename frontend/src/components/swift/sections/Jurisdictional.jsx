@@ -1,5 +1,6 @@
 import React from "react";
 import { Reveal } from "../Reveal";
+import TypingReveal from "../TypingReveal";
 
 export default function Jurisdictional() {
   return (
@@ -22,10 +23,12 @@ export default function Jurisdictional() {
               <h2 className="font-display text-[30px] md:text-[40px] font-semibold leading-tight tracking-tight">
                 What We Are Not
               </h2>
-              <p className="mt-5 text-[16px] md:text-[17px] leading-[1.75] text-white/80 max-w-3xl">
-                SwiftResolwe is not a court. We provide the procedural infrastructure, qualified
-                neutrals, and institutional rules within which disputes are conclusively resolved.
-              </p>
+              <TypingReveal
+                text="SwiftResolwe is not a court. We provide the procedural infrastructure, qualified neutrals, and institutional rules within which disputes are conclusively resolved."
+                as="p"
+                className="mt-5 text-[16px] md:text-[17px] leading-[1.75] text-white/80 max-w-3xl"
+                duration={1800}
+              />
             </div>
           </div>
         </Reveal>
