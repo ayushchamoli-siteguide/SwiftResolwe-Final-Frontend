@@ -215,10 +215,10 @@ export default function ChatAssistant() {
         data-testid="chat-launcher"
         aria-label="Open SwiftResolwe Assistant"
         onClick={() => setOpen((v) => !v)}
-        className={`fixed bottom-24 right-5 z-[70] w-14 h-14 rounded-full text-white flex items-center justify-center cta-primary ${
+        className={`!fixed bottom-6 right-6 z-[70] w-14 h-14 rounded-full text-white flex items-center justify-center cta-primary ${
           open ? "" : "chat-idle"
         }`}
-        style={{ background: "var(--accent)" }}
+        style={{ background: "var(--accent)", position: "fixed" }}
       >
         {open ? <X size={22} /> : <MessageSquareText size={22} />}
       </button>
@@ -230,7 +230,7 @@ export default function ChatAssistant() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 12, scale: 0.97 }}
             transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-            className="fixed z-[69] bottom-44 right-5 w-[min(380px,calc(100vw-2rem))] h-[min(560px,calc(100vh-12rem))] rounded-2xl bg-white/95 backdrop-blur-xl border border-[color:var(--border-soft)] shadow-2xl flex flex-col overflow-hidden"
+            className="fixed z-[69] bottom-24 right-6 w-[min(380px,calc(100vw-2rem))] h-[min(560px,calc(100vh-8rem))] rounded-2xl bg-white/95 backdrop-blur-xl border border-[color:var(--border-soft)] shadow-2xl flex flex-col overflow-hidden"
             data-testid="chat-panel"
             role="dialog"
             aria-label="SwiftResolwe Assistant"

@@ -171,7 +171,7 @@ export default function Hero() {
             Skip the long delays of traditional courts. SwiftResolwe is an institutional online
             dispute resolution platform that routes every business or consumer dispute to the
             resolution path best suited to it, then carries it through to a binding settlement
-            agreement or an enforceable arbitral award. Fast, simple, and fully online.
+            agreement or an enforceable arbitral award. Fast, simple, and completely online.
           </p>
           <div className="mt-9 flex flex-wrap items-center gap-3">
             <button
@@ -192,10 +192,6 @@ export default function Hero() {
             <span className="flex items-center gap-2">
               <span className="w-1.5 h-1.5 rounded-full bg-[color:var(--positive)]" />
               END TO END ENCRYPTED
-            </span>
-            <span className="flex items-center gap-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-[color:var(--positive)]" />
-              28 STATES AND UTS
             </span>
           </div>
         </Reveal>

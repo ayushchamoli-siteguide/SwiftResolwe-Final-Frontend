@@ -32,6 +32,15 @@ function useLenis() {
 
 function Shell({ children }) {
   useLenis();
+  useEffect(() => {
+    // Remove any platform-injected badge (per user request)
+    const remove = () => {
+      document.querySelectorAll('#emergent-badge, a[href*="emergent.sh"]').forEach((el) => el.remove());
+    };
+    remove();
+    const id = setInterval(remove, 800);
+    return () => clearInterval(id);
+  }, []);
   return (
     <div className="App relative">
       <ScrollProgress />

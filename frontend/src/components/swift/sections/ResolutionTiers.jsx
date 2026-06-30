@@ -62,7 +62,7 @@ const TIERS = [
 function TierCard({ tier, idx }) {
   const Icon = tier.icon;
   return (
-    <div className="swift-card p-7 sm:p-8 h-full flex flex-col">
+    <div className="swift-card p-7 sm:p-8 h-full flex flex-col" data-no-justify="true">
       <div className="flex items-center justify-between mb-5">
         <span className="font-mono text-[11px] uppercase tracking-[0.22em] text-[color:var(--accent)]">
           {tier.code}
@@ -74,20 +74,20 @@ function TierCard({ tier, idx }) {
       <h3 className="font-display text-[22px] font-semibold text-[color:var(--text-primary)] mb-5">
         {tier.name}
       </h3>
-      <ul className="space-y-3 mb-6 text-[color:var(--text-secondary)] text-[14.5px] leading-[1.65] flex-1">
+      <ul className="space-y-3 mb-6 text-[color:var(--text-secondary)] text-[14.5px] leading-[1.65] flex-1 text-left">
         {tier.bullets.map((b, i) => (
-          <li key={i} className="flex gap-3">
+          <li key={i} className="flex gap-3 text-left">
             <span className="mt-2 w-1.5 h-1.5 rounded-full bg-[color:var(--accent)] shrink-0" />
             <TypingReveal text={b} delay={idx * 250 + i * 80} duration={1600} as="span" caret={i === 0} />
           </li>
         ))}
       </ul>
-      <div className="mt-auto rounded-xl bg-[color:var(--bg-surface-2)] p-4">
+      <div className="mt-auto rounded-xl bg-[color:var(--bg-surface-2)] p-4 text-left">
         <div className="font-mono text-[10.5px] uppercase tracking-[0.18em] text-[color:var(--accent-deep)] flex items-center gap-2 mb-2">
           <ShieldCheck size={12} />
           Legal Outcome and Enforceability
         </div>
-        <p className="text-[13px] leading-[1.6] text-[color:var(--text-primary)]">{tier.outcome}</p>
+        <p className="text-[13px] leading-[1.6] text-[color:var(--text-primary)] text-left">{tier.outcome}</p>
       </div>
     </div>
   );

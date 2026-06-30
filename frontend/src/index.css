@@ -105,7 +105,7 @@ html.lenis body {
     100% { transform: translateX(-50%); }
 }
 .marquee-track {
-    animation: marquee 18s linear infinite;
+    animation: marquee 9s linear infinite;
     will-change: transform;
 }
 .marquee-pause:hover .marquee-track { animation-play-state: paused; }
@@ -281,6 +281,11 @@ main section blockquote {
 main section .font-mono,
 main section .mono-left,
 main section .text-center p,
-main section [data-no-justify="true"] {
-    text-align: inherit !important;
+main section [data-no-justify="true"],
+main section [data-no-justify="true"] p,
+main section [data-no-justify="true"] li {
+    text-align: left !important;
 }
+
+/* Hide platform-injected badge per user request */
+#emergent-badge { display: none !important; }
