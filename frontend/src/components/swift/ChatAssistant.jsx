@@ -1,9 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { MessageSquareText, X, Send, Sparkles } from "lucide-react";
-import { useSwift } from "./SwiftContext";
-
-// --- Knowledge base built from the page ---
+import { useSwift } from "./SwiftContext";// --- Knowledge base built from the page ---
 const KB = [
   {
     keys: ["negotiate", "tier 1", "tier01", "tier 01", "settle directly", "negotiation"],
@@ -103,7 +101,7 @@ function findAnswer(text) {
 export default function ChatAssistant() {
   const { openComingSoon } = useSwift();
   const [open, setOpen] = useState(false);
-  const [shownNotice, setShownNotice] = useState(false);
+  const shownRef = useRef(false);
   const [messages, setMessages] = useState([
     {
       role: "assistant",
@@ -115,14 +113,13 @@ export default function ChatAssistant() {
   const scrollRef = useRef(null);
 
   useEffect(() => {
-    if (open && !shownNotice) {
-      // Fallback mode: show Coming Soon Message B once on first open
+    if (open && !shownRef.current) {
+      shownRef.current = true;
       const t = setTimeout(() => openComingSoon("B"), 350);
-      setShownNotice(true);
       return () => clearTimeout(t);
     }
     return undefined;
-  }, [open, shownNotice, openComingSoon]);
+  }, [open, openComingSoon]);
 
   useEffect(() => {
     if (scrollRef.current) scrollRef.current.scrollTop = scrollRef.current.scrollHeight;

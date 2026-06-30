@@ -163,8 +163,8 @@ export default function Hero() {
             India&apos;s Premier ODR 2.0 Infrastructure
           </div>
           <h1 className="font-display text-[40px] sm:text-[52px] lg:text-[58px] leading-[1.05] font-semibold tracking-tight text-[color:var(--text-primary)]">
-            Conflict is a variable;
-            <br />
+            Conflict is a variable;{" "}
+            <br className="hidden sm:inline" />
             <span style={{ color: "var(--accent-deep)" }}>Resolution</span> a Constant.
           </h1>
           <p className="mt-7 text-[16px] sm:text-[17px] leading-[1.7] text-[color:var(--text-secondary)] max-w-2xl">
