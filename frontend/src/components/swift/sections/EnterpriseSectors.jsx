@@ -66,10 +66,7 @@ export default function EnterpriseSectors() {
             return (
               <StaggerItem key={s.code}>
                 <div className="swift-card p-7 h-full flex flex-col">
-                  <div className="flex items-center justify-between mb-5">
-                    <span className="font-mono text-[11px] uppercase tracking-[0.22em] text-[color:var(--accent)]">
-                      {s.code}
-                    </span>
+                  <div className="flex items-center justify-end mb-5">
                     <div className="w-10 h-10 rounded-xl bg-[color:rgba(6,182,212,0.1)] flex items-center justify-center text-[color:var(--accent-deep)]">
                       <Icon size={18} />
                     </div>

@@ -169,8 +169,8 @@ export default function Hero() {
           </h1>
           <p className="mt-7 text-[16px] sm:text-[17px] leading-[1.7] text-[color:var(--text-secondary)] max-w-2xl">
             Skip the long delays of traditional courts. SwiftResolwe is an institutional online
-            dispute resolution platform that routes every business or consumer dispute to the
-            resolution path best suited to it, then carries it through to a binding settlement
+            dispute resolution platform that routes every dispute to the resolution path best
+            suited to it, then carries it through to a binding settlement
             agreement or an enforceable arbitral award. Fast, simple, and completely online.
           </p>
           <div className="mt-9 flex flex-wrap items-center gap-3">

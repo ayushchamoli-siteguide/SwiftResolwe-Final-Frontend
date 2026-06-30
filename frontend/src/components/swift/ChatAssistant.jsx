@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { MessageSquareText, X, Send, Sparkles } from "lucide-react";
-import { useSwift } from "./SwiftContext";// --- Knowledge base built from the page ---
+import { MessageSquareText, X, Send, Sparkles } from "lucide-react";// --- Knowledge base built from the page ---
 const KB = [
   {
     keys: ["what is swiftresolwe", "about swiftresolwe", "what does swiftresolwe", "platform overview", "introduction", "overview", "who are you"],
@@ -171,9 +170,7 @@ function findAnswer(text) {
 }
 
 export default function ChatAssistant() {
-  const { openComingSoon } = useSwift();
   const [open, setOpen] = useState(false);
-  const shownRef = useRef(false);
   const [messages, setMessages] = useState([
     {
       role: "assistant",
@@ -183,15 +180,6 @@ export default function ChatAssistant() {
   ]);
   const [input, setInput] = useState("");
   const scrollRef = useRef(null);
-
-  useEffect(() => {
-    if (open && !shownRef.current) {
-      shownRef.current = true;
-      const t = setTimeout(() => openComingSoon("B"), 350);
-      return () => clearTimeout(t);
-    }
-    return undefined;
-  }, [open, openComingSoon]);
 
   useEffect(() => {
     if (scrollRef.current) scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
@@ -241,9 +229,6 @@ export default function ChatAssistant() {
               </div>
               <div>
                 <div className="font-display text-[14.5px] font-semibold">SwiftResolwe Assistant</div>
-                <div className="font-mono text-[10.5px] uppercase tracking-[0.16em] text-[color:var(--text-muted)]">
-                  Light mode, fallback
-                </div>
               </div>
             </div>
 
