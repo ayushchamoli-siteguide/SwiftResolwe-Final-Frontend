@@ -1,0 +1,42 @@
+{
+  "summary": "Second iteration validating the new SwiftResolwe fixes. 13 of 14 critical behaviors PASS. Hero trust badges replaced correctly (ISO 27001 CERTIFIED, END TO END ENCRYPTED, 28 STATES AND UTS — all uppercase, DPDP Act 2023 fully removed from hero). Hero triage SVG renders larger boxes (dispute 130x44, tier 140x52) with SWIFT TRIAGE / ENGINE hub label visible. Marquee animation-duration is 18s. Body p getComputedStyle textAlign is 'justify' across hero/tier/sector/manifesto paragraphs. The TypingReveal rewrite is verified: tier bullets, panel cards, sector cards (V/01..V/05) and case manager cards all render fully visible text with color rgb(71,85,105) and opacity 1 — no hidden/invisible bullets anywhere. Panel quote is now 'In conflict, be fair and generous.' — Lao Tzu (Ramana / 'social justice' completely gone). Calculator heading reads 'Claim Amount Lever' (no 'Interactive:' prefix), sub-label format is 'X% lesser than traditional litigation cost' (the old 'about X% versus traditional litigation' is gone). Slider keyboard-drag updates result-cost live (Rupees 1.72 L -> 2.00 L). Chat launcher is at bottom 96px right 20px (cleanly above Emergent badge); chat panel at bottom 176px. First-open Coming Soon (Message B 'Model Completing Training') modal now fires correctly (last iteration's useEffect bug is fixed via shownRef). 4 of 5 chat KB probes return the expected entry; the 5th ('Tell me about arbitration') returns the generic SwiftResolwe overview instead of the arbitration entry due to a KB scoring collision — 'tell me about' (13 chars) outweighs 'arbitration' (11 chars) and 'arbitrate' does not substring-match 'arbitration'.",
+  "backend_issues": {
+    "critical": [],
+    "minor": []
+  },
+  "frontend_issues": {
+    "ui_bugs": [
+      {
+        "component": "ChatAssistant KB (findAnswer scoring)",
+        "issue": "Query 'Tell me about arbitration' returns the generic 'SwiftResolwe is India\u2019s premier Online Dispute Resolution (ODR 2.0) platform...' overview instead of the arbitration entry. Root cause: findAnswer scores each KB entry by SUM(length of every key whose substring is present in the lowercased query). The first KB entry ('what is swiftresolwe') has the broad fallback key 'tell me about' (length 13). The arbitration entry's matching key on this query is only 'arbitration' (length 11) because the other arbitration key 'arbitrate' is NOT a substring of 'arbitration' (positions 8 differ: 'arbitrate' ends in -ate, 'arbitration' has -ati). Net: 13 > 11, so the overview wins. This contradicts the test spec which requires the reply to contain 'Section 36' or 'Arbitral Award'.",
+        "selector": "[data-testid=\"chat-input\"] -> [data-testid=\"chat-messages\"] last child",
+        "priority": "HIGH"
+      }
+    ],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "test_report_links": [],
+  "action_items": [
+    "Fix ChatAssistant.jsx KB scoring so 'Tell me about arbitration' (and analogous 'Tell me about mediation/negotiation/conciliation') resolves to the right tier entry. Two cheap options: (a) Remove the broad 'tell me about' key from the 'what is swiftresolwe' entry — it is too greedy and catches any 'tell me about X' query. (b) Or boost specificity by adding 'about arbitration' to the arbitration entry and similar for the other tier entries. (c) Or change scoring to prefer the entry with the LONGEST single matching key rather than sum of lengths. Recommended: do (a) + (c) together."
+  ],
+  "critical_code_review_comments": [
+    "ChatAssistant.jsx findAnswer uses sum-of-matched-key-lengths which causes collisions on multi-topic queries (e.g. 'tell me about arbitration'). Consider longest-single-key wins, or weight by key specificity (number of words / rare words).",
+    "ChatAssistant.jsx KB key 'tell me about' is far too broad for the introductory entry — it will hijack 'tell me about <anything>' queries. Remove it or move it to a generic fallback only when nothing else matches.",
+    "Hero.jsx TriageVisual uses absolute SVG coordinates with hard-coded grid; the hub circle radius r=90 with text fontSize=15 fits inside but only narrowly. If 'SWIFT TRIAGE ENGINE' ever changes copy, re-verify it does not clip.",
+    "TypingReveal.jsx is now non-destructive (text always rendered) but it still mounts a requestAnimationFrame loop + setState per frame for the progress value even though `progress` is no longer used for visual masking, only to fade the caret opacity. Consider dropping the rAF loop entirely and replacing the caret with a pure CSS animation; would remove a re-render-per-frame for every revealed paragraph on the page.",
+    "EconomicAdvantage sub-label phrase 'X% lesser than traditional litigation cost' is grammatically slightly off ('lesser than' usually implies comparison of two single nouns, not percentages of a cost). Consider 'X% less than traditional litigation cost' for cleaner English. Non-blocking, copy choice.",
+    "CSS rule `main section p, main section li, main section blockquote { text-align: justify }` applies to li items including footer-style lists and aligned headings inside cards; one paragraph ('Unsure whether your claim qualifies...') still resolves to 'center' because of an inline class override — confirm that is intentional."
+  ],
+  "updated_files": [],
+  "success_rate": {
+    "backend": "n/a (frontend-only testing)",
+    "frontend": "93% (13 of 14 verified; the single failing behavior is the chat KB arbitration lookup)"
+  },
+  "test_credentials": "none required",
+  "seed_data_creation": "none",
+  "retest_needed": true,
+  "main_agent_can_self_test": true,
+  "context_for_next_testing_agent": "After the chat KB fix, retest only the 5 chat probes in iteration_2: 'What is SwiftResolwe?' -> ODR; 'How does it work?' -> triage/tier/three steps; 'How long does it take?' -> 45 to 60/days/fixed; 'How much does it cost?' -> 80 to 90/percent/savings; 'Tell me about arbitration' -> Section 36 / Arbitral Award. Everything else (hero badges, SVG sizes, marquee 18s, justify CSS, TypingReveal full visibility on tiers/panel/sectors/case-managers, Lao Tzu quote, calculator heading + sub-label + slider live update, chat launcher bottom:96px/panel bottom:176px, first-open Coming Soon Message B with 'training') is already verified on this run and unlikely to regress. External URL used: REACT_APP_BACKEND_URL = https://justice-engine-6.preview.emergentagent.com (the URL in the request body 1fe56492-... did not resolve to this preview; .env value is the canonical one).",
+  "rca_of_the_issue": "ChatAssistant.jsx findAnswer: for q='Tell me about arbitration' (lowercased 'tell me about arbitration'): (1) KB entry 'what is swiftresolwe' has key 'tell me about' (length 13) which matches as a substring -> score=13. (2) KB entry 'arbitrate' (Tier 04) has keys 'arbitrate' (len 9), 'tier 4' (len 6), 'tier 04' (len 7), 'arbitration' (len 11), 'arbitrator' (len 10), 'award' (len 5). Of these, only 'arbitration' is a substring of the query (note: 'arbitrate' is NOT a substring of 'arbitration' because the 9th character differs: 'arbitrate'[8]='e', 'arbitration'[8]='i') -> score=11. (3) 13 > 11, so the introductory entry is returned. Reproduction: open the site, click chat-launcher, dismiss the Coming Soon modal, type 'Tell me about arbitration' into chat-input, press chat-send-btn, wait 1s, read the last assistant bubble — it returns the SwiftResolwe overview, NOT the arbitration enforceability paragraph. Mitigation: remove the broad 'tell me about' key from the first KB entry (it should be reserved as a fallback, not a high-priority key), and/or change the scoring rule to use the maximum single matching key length instead of the sum, which prevents broad keys from outscoring narrow specific keys."
+}

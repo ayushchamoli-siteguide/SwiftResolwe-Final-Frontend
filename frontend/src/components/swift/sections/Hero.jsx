@@ -21,11 +21,11 @@ const TIERS = [
 ];
 
 function TriageVisual() {
-  // Coordinates: viewBox 620x520. Hub center (310, 260)
-  const cx = 310, cy = 260, r = 78;
-  const disputeX = 50, tierX = 500;
-  const disputeYs = [60, 142, 224, 306, 388, 470];
-  const tierYs = [108, 220, 332, 444];
+  // Coordinates: viewBox 660x560. Hub center (330, 280)
+  const cx = 330, cy = 280, r = 90;
+  const disputeX = 20, tierX = 500;
+  const disputeYs = [50, 138, 226, 314, 402, 490];
+  const tierYs = [104, 232, 360, 488];
 
   return (
     <div className="relative w-full">
@@ -42,7 +42,7 @@ function TriageVisual() {
 
       <div className="relative rounded-2xl swift-card overflow-hidden p-4 sm:p-6 bg-white">
         <svg
-          viewBox="0 0 620 520"
+          viewBox="0 0 660 560"
           className="w-full h-auto"
           xmlns="http://www.w3.org/2000/svg"
           aria-label="Swift Triage Engine routing visual"
@@ -62,22 +62,22 @@ function TriageVisual() {
 
           {/* faint grid */}
           <g opacity="0.45">
-            {Array.from({ length: 11 }).map((_, i) => (
-              <line key={`v${i}`} x1={i * 62} y1="0" x2={i * 62} y2="520" stroke="#E8EDF5" strokeWidth="1" />
+            {Array.from({ length: 12 }).map((_, i) => (
+              <line key={`v${i}`} x1={i * 60} y1="0" x2={i * 60} y2="560" stroke="#E8EDF5" strokeWidth="1" />
             ))}
             {Array.from({ length: 10 }).map((_, i) => (
-              <line key={`h${i}`} x1="0" y1={i * 60} x2="620" y2={i * 60} stroke="#E8EDF5" strokeWidth="1" />
+              <line key={`h${i}`} x1="0" y1={i * 62} x2="660" y2={i * 62} stroke="#E8EDF5" strokeWidth="1" />
             ))}
           </g>
 
           {/* Edges: disputes -> hub */}
           {disputeYs.map((y, i) => {
-            const path = `M ${disputeX + 100} ${y + 18} C ${disputeX + 190} ${y + 18}, ${cx - 110} ${cy}, ${cx - r} ${cy}`;
+            const path = `M ${disputeX + 130} ${y + 22} C ${disputeX + 220} ${y + 22}, ${cx - 130} ${cy}, ${cx - r} ${cy}`;
             return (
               <g key={`de-${i}`}>
                 <path d={path} stroke="#CFE4EC" strokeWidth="1.4" fill="none" />
                 <motion.circle
-                  r="3.4"
+                  r="4"
                   fill="#06B6D4"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: [0, 1, 1, 0] }}
@@ -91,11 +91,11 @@ function TriageVisual() {
 
           {/* Edges: hub -> tiers */}
           {tierYs.map((y, i) => {
-            const path = `M ${cx + r} ${cy} C ${cx + 110} ${cy}, ${tierX - 70} ${y + 22}, ${tierX} ${y + 22}`;
+            const path = `M ${cx + r} ${cy} C ${cx + 120} ${cy}, ${tierX - 80} ${y + 26}, ${tierX} ${y + 26}`;
             return (
               <g key={`te-${i}`}>
                 <path d={path} stroke="#CFE4EC" strokeWidth="1.4" fill="none" />
-                <motion.circle r="3.4" fill="#0891B2">
+                <motion.circle r="4" fill="#0891B2">
                   <animateMotion dur="2.6s" repeatCount="indefinite" begin={`${0.6 + i * 0.35}s`} path={path} />
                 </motion.circle>
               </g>
@@ -103,15 +103,15 @@ function TriageVisual() {
           })}
 
           {/* Hub glow + circle */}
-          <circle cx={cx} cy={cy} r={r + 30} fill="url(#hubGrad)" />
-          <circle cx={cx} cy={cy} r={r} fill="#ffffff" stroke="#06B6D4" strokeWidth="1.6" />
-          <circle cx={cx} cy={cy} r={r - 8} fill="none" stroke="#06B6D4" strokeOpacity="0.25" strokeWidth="1" strokeDasharray="3 5">
+          <circle cx={cx} cy={cy} r={r + 36} fill="url(#hubGrad)" />
+          <circle cx={cx} cy={cy} r={r} fill="#ffffff" stroke="#06B6D4" strokeWidth="1.8" />
+          <circle cx={cx} cy={cy} r={r - 10} fill="none" stroke="#06B6D4" strokeOpacity="0.25" strokeWidth="1" strokeDasharray="3 5">
             <animateTransform attributeName="transform" type="rotate" from={`0 ${cx} ${cy}`} to={`360 ${cx} ${cy}`} dur="22s" repeatCount="indefinite" />
           </circle>
-          <text x={cx} y={cy - 6} textAnchor="middle" className="font-mono" fontSize="13" fontWeight="600" fill="#0E1726" style={{ letterSpacing: "0.16em" }}>
+          <text x={cx} y={cy - 6} textAnchor="middle" className="font-mono" fontSize="15" fontWeight="700" fill="#0E1726" style={{ letterSpacing: "0.18em" }}>
             SWIFT TRIAGE
           </text>
-          <text x={cx} y={cy + 14} textAnchor="middle" className="font-mono" fontSize="13" fontWeight="600" fill="#0891B2" style={{ letterSpacing: "0.16em" }}>
+          <text x={cx} y={cy + 16} textAnchor="middle" className="font-mono" fontSize="15" fontWeight="700" fill="#0891B2" style={{ letterSpacing: "0.18em" }}>
             ENGINE
           </text>
 
@@ -120,8 +120,8 @@ function TriageVisual() {
             const y = disputeYs[i];
             return (
               <g key={d.id}>
-                <rect x={disputeX} y={y} width="100" height="36" rx="10" fill="white" stroke="#E2E8F2" strokeWidth="1" />
-                <text x={disputeX + 50} y={y + 22} textAnchor="middle" fontSize="10.5" fontWeight="600" fill="#0E1726" className="font-mono">
+                <rect x={disputeX} y={y} width="130" height="44" rx="12" fill="white" stroke="#E2E8F2" strokeWidth="1.2" />
+                <text x={disputeX + 65} y={y + 27} textAnchor="middle" fontSize="13" fontWeight="600" fill="#0E1726" className="font-mono">
                   {d.label}
                 </text>
               </g>
@@ -133,11 +133,11 @@ function TriageVisual() {
             const y = tierYs[i];
             return (
               <g key={t.id}>
-                <rect x={tierX} y={y} width="110" height="44" rx="10" fill="#ECFEFF" stroke="#06B6D4" strokeWidth="1.2" />
-                <text x={tierX + 55} y={y + 17} textAnchor="middle" fontSize="9.5" fontWeight="700" fill="#0E7490" className="font-mono" style={{ letterSpacing: "0.12em" }}>
+                <rect x={tierX} y={y} width="140" height="52" rx="12" fill="#ECFEFF" stroke="#06B6D4" strokeWidth="1.4" />
+                <text x={tierX + 70} y={y + 20} textAnchor="middle" fontSize="11" fontWeight="700" fill="#0E7490" className="font-mono" style={{ letterSpacing: "0.14em" }}>
                   {t.label}
                 </text>
-                <text x={tierX + 55} y={y + 33} textAnchor="middle" fontSize="11" fontWeight="600" fill="#0E1726">
+                <text x={tierX + 70} y={y + 38} textAnchor="middle" fontSize="13" fontWeight="600" fill="#0E1726">
                   {t.name}
                 </text>
               </g>
@@ -184,18 +184,18 @@ export default function Hero() {
             </button>
           </div>
 
-          <div className="mt-10 flex items-center gap-7 text-[12.5px] font-mono uppercase tracking-[0.15em] text-[color:var(--text-muted)]">
+          <div className="mt-10 flex flex-wrap items-center gap-x-7 gap-y-3 text-[12.5px] font-mono uppercase tracking-[0.15em] text-[color:var(--text-muted)]">
             <span className="flex items-center gap-2">
               <span className="w-1.5 h-1.5 rounded-full bg-[color:var(--positive)]" />
-              ISO 27001
+              ISO 27001 CERTIFIED
             </span>
             <span className="flex items-center gap-2">
               <span className="w-1.5 h-1.5 rounded-full bg-[color:var(--positive)]" />
-              DPDP Act 2023
+              END TO END ENCRYPTED
             </span>
             <span className="flex items-center gap-2">
               <span className="w-1.5 h-1.5 rounded-full bg-[color:var(--positive)]" />
-              28 States and UTs
+              28 STATES AND UTS
             </span>
           </div>
         </Reveal>

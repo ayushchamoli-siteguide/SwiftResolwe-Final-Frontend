@@ -164,7 +164,7 @@ export default function EconomicAdvantage() {
             <div className="relative">
               <div className="font-mono text-[11px] uppercase tracking-[0.22em] text-[color:var(--accent-deep)] mb-3 flex items-center gap-2">
                 <Calculator size={13} />
-                Interactive: Claim Amount Lever
+                Claim Amount Lever
               </div>
               <h3 className="font-display text-[24px] md:text-[28px] font-semibold text-[color:var(--text-primary)]">
                 Set your claim. Watch the math react.
@@ -221,7 +221,7 @@ export default function EconomicAdvantage() {
                       {formatIndianRupees(result.costSaved)}
                     </div>
                     <div className="mt-1.5 text-[12px] text-[color:var(--text-secondary)]">
-                      about {result.pctSaved}% versus traditional litigation
+                      {result.pctSaved}% lesser than traditional litigation cost
                     </div>
                   </motion.div>
 

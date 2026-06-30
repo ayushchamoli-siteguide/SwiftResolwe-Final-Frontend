@@ -34,12 +34,12 @@ export default function PanelNeutrals() {
 
           <div className="rounded-2xl bg-white border border-[color:var(--border-soft)] p-8 md:p-10 mb-10 relative overflow-hidden">
             <Quote size={42} className="absolute -top-2 -left-1 text-[color:rgba(6,182,212,0.15)]" />
-            <p className="relative font-display text-[22px] md:text-[28px] leading-[1.35] font-medium text-[color:var(--text-primary)] italic">
-              &ldquo;Mediation can be described as a tool of social justice.&rdquo;
+            <p className="relative font-display text-[22px] md:text-[28px] leading-[1.35] font-medium text-[color:var(--text-primary)] italic" data-no-justify="true">
+              &ldquo;In conflict, be fair and generous.&rdquo;
             </p>
             <p className="relative mt-4 font-mono text-[12px] tracking-[0.14em] text-[color:var(--text-muted)] flex items-center gap-2">
               <span className="w-1.5 h-1.5 rounded-full bg-[color:var(--accent)]" />
-              Justice N. V. Ramana, former Chief Justice of India
+              Lao Tzu
             </p>
           </div>
 
