@@ -4,7 +4,7 @@ import { MessageSquareText, X, Send, Sparkles } from "lucide-react";
 import { useSwift } from "./SwiftContext";// --- Knowledge base built from the page ---
 const KB = [
   {
-    keys: ["what is swiftresolwe", "about swiftresolwe", "what does swiftresolwe", "platform", "introduction", "overview", "who are you", "tell me about"],
+    keys: ["what is swiftresolwe", "about swiftresolwe", "what does swiftresolwe", "platform overview", "introduction", "overview", "who are you"],
     answer:
       "SwiftResolwe is India's premier Online Dispute Resolution (ODR 2.0) platform. We resolve civil and commercial disputes online through four standalone tiers: Negotiate, Mediate, Conciliate, and Arbitrate. Disputes are routed by a triage engine, heard by independent neutrals, and closed with a binding, statutorily enforceable outcome.",
   },
@@ -159,7 +159,9 @@ function findAnswer(text) {
   let bestScore = 0;
   for (const item of KB) {
     let score = 0;
-    for (const k of item.keys) if (t.includes(k)) score += k.length;
+    for (const k of item.keys) {
+      if (t.includes(k) && k.length > score) score = k.length; // longest single matching key wins
+    }
     if (score > bestScore) {
       bestScore = score;
       best = item;
