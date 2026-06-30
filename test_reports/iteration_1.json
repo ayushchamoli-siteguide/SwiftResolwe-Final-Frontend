@@ -1,0 +1,46 @@
+{
+  "summary": "Comprehensive frontend testing of SwiftResolwe landing page. 14 of 15 critical behaviors verified. One real bug found: Chat first-open Coming Soon (Message B) modal does NOT appear because the useEffect cleanup clears the scheduled setTimeout when shownNotice flips true (shownNotice is in deps array). All other flows: hero/schedule modal, header nav anchors, scroll-triggered persistent CTA, triage-cta (B), empanelment-cta (A), dual-track Explore buttons (A), 13 footer links (A), interactive calculator with Indian formatting, FAQ 8-item accordion (one open at a time), chat KB answer for arbitration (returns Section 36 + Arbitral Award), /login page + back link, mobile menu + mobile schedule button + no horizontal overflow, zero hyphens/dashes anywhere in body copy, Tier 04 outcome citations, zero console errors on load. Hero CTA verified as solid cyan rgb(8,145,178) with white text.",
+  "backend_issues": {
+    "critical": [],
+    "minor": []
+  },
+  "frontend_issues": {
+    "ui_bugs": [
+      {
+        "component": "ChatAssistant",
+        "issue": "First-open Coming Soon (Message B) modal does NOT appear when the chat panel is opened the first time. Root cause: in ChatAssistant.jsx useEffect, the dependency array includes shownNotice. The effect schedules setTimeout(openComingSoon('B'), 350) AND immediately calls setShownNotice(true) in the same effect run. The state update changes shownNotice from false to true, which causes the effect's cleanup function to run BEFORE the 350ms timer fires, clearing the timeout. Net result: openComingSoon('B') is never invoked. Fix: remove shownNotice from the dependency array, or use a useRef instead of state to track the one-shot flag, or call setShownNotice(true) only inside the setTimeout callback after openComingSoon fires.",
+        "selector": "[data-testid=\"chat-launcher\"] -> [data-testid=\"coming-soon-modal\"]",
+        "priority": "HIGH"
+      },
+      {
+        "component": "Hero H1",
+        "issue": "innerText reads 'Conflict is a variable;Resolution a Constant.' (no space between ';' and 'Resolution') because the JSX is 'variable;<br/><span>Resolution</span> a Constant.' with no whitespace between the closing of the literal text and the span. Visually the line break provides separation, but the rendered textContent does not match the verbatim spec string 'Conflict is a variable; Resolution a Constant.'. Insert a literal space or {' '} between `<br />` and the `<span>` for the text node to read correctly for screen readers and copy-paste.",
+        "selector": "main h1",
+        "priority": "LOW"
+      }
+    ],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "test_report_links": [],
+  "action_items": [
+    "Fix ChatAssistant.jsx useEffect to ensure Coming Soon (Message B) modal fires on the first chat panel open. Recommended fix: replace `shownNotice` useState with a useRef so the deps array becomes [open, openComingSoon] only, e.g. `const shownRef = useRef(false); useEffect(() => { if (open && !shownRef.current) { shownRef.current = true; const t = setTimeout(() => openComingSoon('B'), 350); return () => clearTimeout(t); } }, [open, openComingSoon]);`",
+    "(Low) Add a space between the `<br />` and `<span>Resolution</span>` in Hero.jsx H1 so the textContent reads 'Conflict is a variable; Resolution a Constant.' verbatim."
+  ],
+  "critical_code_review_comments": [
+    "ChatAssistant.jsx one-shot first-open notice should use a useRef, not state in the effect's dep array — current pattern is self-canceling.",
+    "App.js wildcard route `path='*'` renders Landing inside Shell which means /login will work but unknown routes silently render landing — consider a real 404 page for clarity (non-blocking).",
+    "Lenis is initialized but not exposed; that's fine, but ensure smooth scroll plays well with scrollIntoView (it does because Lenis hooks window scroll)."
+  ],
+  "updated_files": [],
+  "success_rate": {
+    "backend": "n/a (frontend-only testing)",
+    "frontend": "93% (14 of 15 critical behaviors pass; chat first-open modal is the single failing behavior)"
+  },
+  "test_credentials": "none required",
+  "seed_data_creation": "none",
+  "retest_needed": true,
+  "main_agent_can_self_test": true,
+  "context_for_next_testing_agent": "Re-verify only: open chat-launcher fresh -> coming-soon-modal with body containing 'training' should appear within ~1s, close it, then verify chat-input + chat-send-btn flow still works. Everything else has been verified end-to-end. External URL: https://justice-engine-6.preview.emergentagent.com/.",
+  "rca_of_the_issue": "ChatAssistant useEffect deps include `shownNotice`. The effect body both schedules a setTimeout (350ms) and synchronously calls setShownNotice(true). React schedules a re-render where shownNotice=true; the deps array changed (false -> true), so React runs the cleanup of the previous effect, which calls clearTimeout(t). The timer never fires, so openComingSoon('B') is never invoked. Reproduction: open / in a fresh tab, click [data-testid='chat-launcher'], wait 5 seconds, observe no coming-soon-modal appears. Mitigation: track the one-shot flag in a ref (no re-render, no effect rerun) so the cleanup does not race the timer."
+}
