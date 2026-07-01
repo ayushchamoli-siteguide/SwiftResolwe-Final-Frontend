@@ -4,13 +4,14 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Lenis from "lenis";
 import Landing from "@/pages/Landing";
 import Login from "@/pages/Login";
+import Schedule from "@/pages/Schedule";
 import { SwiftProvider } from "@/components/swift/SwiftContext";
 import Header from "@/components/swift/Header";
 import Footer from "@/components/swift/Footer";
 import ChatAssistant from "@/components/swift/ChatAssistant";
 import ScrollProgress from "@/components/swift/ScrollProgress";
 import ComingSoonModal from "@/components/swift/ComingSoonModal";
-import ScheduleConsultModal from "@/components/swift/ScheduleConsultModal";
+import { Toaster } from "@/components/ui/sonner";
 
 function useLenis() {
   useEffect(() => {
@@ -53,15 +54,14 @@ function Shell({ children }) {
       <Footer />
       <ChatAssistant />
       <ComingSoonModal />
-      <ScheduleConsultModal />
     </div>
   );
 }
 
 function App() {
   return (
-    <SwiftProvider>
-      <BrowserRouter>
+    <BrowserRouter>
+      <SwiftProvider>
         <Routes>
           <Route
             path="/"
@@ -80,6 +80,14 @@ function App() {
             }
           />
           <Route
+            path="/schedule"
+            element={
+              <Shell>
+                <Schedule />
+              </Shell>
+            }
+          />
+          <Route
             path="*"
             element={
               <Shell>
@@ -88,8 +96,9 @@ function App() {
             }
           />
         </Routes>
-      </BrowserRouter>
-    </SwiftProvider>
+        <Toaster richColors position="top-center" />
+      </SwiftProvider>
+    </BrowserRouter>
   );
 }
 

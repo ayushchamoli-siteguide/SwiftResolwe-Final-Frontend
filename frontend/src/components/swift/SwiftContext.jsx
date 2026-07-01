@@ -1,12 +1,13 @@
 import React, { createContext, useContext, useState, useCallback, useMemo, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 const SwiftCtx = createContext(null);
 
-// External app login/onboarding URL. Login and "Schedule a Consultation"
-// CTAs across the site redirect here.
+// External app login/onboarding URL. The "Login" CTA redirects here.
 export const APP_LOGIN_URL = "https://odr-frontend-mu.vercel.app/auth/login";
 
 export function SwiftProvider({ children }) {
+  const navigate = useNavigate();
   const [comingSoon, setComingSoon] = useState({ open: false, variant: "A" });
   const [schedule, setSchedule] = useState({ open: false });
   const [reducedMotion, setReducedMotion] = useState(false);
@@ -21,9 +22,13 @@ export function SwiftProvider({ children }) {
 
   const openComingSoon = useCallback((variant = "A") => setComingSoon({ open: true, variant }), []);
   const closeComingSoon = useCallback(() => setComingSoon((s) => ({ ...s, open: false })), []);
+  // "Schedule a Consultation" CTAs route to the dedicated booking page.
   const openSchedule = useCallback(() => {
-    window.location.href = APP_LOGIN_URL;
-  }, []);
+    navigate("/schedule");
+    if (typeof window !== "undefined") {
+      window.scrollTo({ top: 0, behavior: "instant" });
+    }
+  }, [navigate]);
   const closeSchedule = useCallback(() => setSchedule({ open: false }), []);
 
   const value = useMemo(
