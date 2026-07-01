@@ -14,7 +14,9 @@ import ScheduleConsultModal from "@/components/swift/ScheduleConsultModal";
 
 function useLenis() {
   useEffect(() => {
-    const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const prefersReduced = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
     if (prefersReduced) return undefined;
     const lenis = new Lenis({ duration: 1.2, lerp: 0.08, smoothWheel: true });
     let rafId;
@@ -32,15 +34,6 @@ function useLenis() {
 
 function Shell({ children }) {
   useLenis();
-  useEffect(() => {
-    // Remove any platform-injected badge (per user request)
-    const remove = () => {
-      document.querySelectorAll('#emergent-badge, a[href*="emergent.sh"]').forEach((el) => el.remove());
-    };
-    remove();
-    const id = setInterval(remove, 800);
-    return () => clearInterval(id);
-  }, []);
   return (
     <div className="App relative">
       <ScrollProgress />
@@ -59,9 +52,30 @@ function App() {
     <SwiftProvider>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Shell><Landing /></Shell>} />
-          <Route path="/login" element={<Shell><Login /></Shell>} />
-          <Route path="*" element={<Shell><Landing /></Shell>} />
+          <Route
+            path="/"
+            element={
+              <Shell>
+                <Landing />
+              </Shell>
+            }
+          />
+          <Route
+            path="/login"
+            element={
+              <Shell>
+                <Login />
+              </Shell>
+            }
+          />
+          <Route
+            path="*"
+            element={
+              <Shell>
+                <Landing />
+              </Shell>
+            }
+          />
         </Routes>
       </BrowserRouter>
     </SwiftProvider>
