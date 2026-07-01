@@ -2,6 +2,10 @@ import React, { createContext, useContext, useState, useCallback, useMemo, useEf
 
 const SwiftCtx = createContext(null);
 
+// External app login/onboarding URL. Login and "Schedule a Consultation"
+// CTAs across the site redirect here.
+export const APP_LOGIN_URL = "https://odr-frontend-mu.vercel.app/auth/login";
+
 export function SwiftProvider({ children }) {
   const [comingSoon, setComingSoon] = useState({ open: false, variant: "A" });
   const [schedule, setSchedule] = useState({ open: false });
@@ -17,7 +21,9 @@ export function SwiftProvider({ children }) {
 
   const openComingSoon = useCallback((variant = "A") => setComingSoon({ open: true, variant }), []);
   const closeComingSoon = useCallback(() => setComingSoon((s) => ({ ...s, open: false })), []);
-  const openSchedule = useCallback(() => setSchedule({ open: true }), []);
+  const openSchedule = useCallback(() => {
+    window.location.href = APP_LOGIN_URL;
+  }, []);
   const closeSchedule = useCallback(() => setSchedule({ open: false }), []);
 
   const value = useMemo(

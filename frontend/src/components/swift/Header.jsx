@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Menu, X } from "lucide-react";
-import BrandGlyph from "./BrandGlyph";
-import { useSwift } from "./SwiftContext";
+import { useSwift, APP_LOGIN_URL } from "./SwiftContext";
 
 const NAV = [
   { label: "For Individuals", anchor: "#dual-track" },
@@ -85,12 +84,8 @@ export default function Header() {
       }`}
     >
       <div className="max-w-7xl mx-auto px-5 sm:px-8 h-16 md:h-20 flex items-center justify-between gap-6">
-        <Link to="/" className="group flex items-center gap-3" data-testid="brand-home-link">
-          <BrandGlyph size={34} />
-          <span className="font-display text-xl sm:text-[22px] font-semibold tracking-tight">
-            <span style={{ color: "var(--text-primary)" }}>Swift</span>
-            <span style={{ color: "var(--accent)" }}>Resolwe</span>
-          </span>
+        <Link to="/" className="group flex items-center" data-testid="brand-home-link">
+          <img src="/logo.webp" alt="SwiftResolwe" className="h-8 sm:h-9 w-auto" />
         </Link>
 
         <nav className="hidden lg:flex items-center gap-8" aria-label="Primary">
@@ -108,13 +103,13 @@ export default function Header() {
         </nav>
 
         <div className="flex items-center gap-3">
-          <Link
-            to="/login"
+          <a
+            href={APP_LOGIN_URL}
             data-testid="login-link"
             className="hidden sm:inline-flex text-[14px] font-medium text-[color:var(--text-primary)] hover:text-[color:var(--accent-deep)] px-3 py-2 rounded-lg transition-colors"
           >
             Log In
-          </Link>
+          </a>
 
           <button
             data-testid="schedule-consultation-btn"
@@ -155,13 +150,13 @@ export default function Header() {
               {n.label}
             </a>
           ))}
-          <Link
-            to="/login"
+          <a
+            href={APP_LOGIN_URL}
             className="py-3 px-2 text-[15px] font-medium text-[color:var(--text-primary)] rounded-lg hover:bg-[color:var(--bg-surface-2)]"
             onClick={() => setMobileOpen(false)}
           >
             Log In
-          </Link>
+          </a>
           <button
             data-testid="mobile-schedule-btn"
             onClick={() => {

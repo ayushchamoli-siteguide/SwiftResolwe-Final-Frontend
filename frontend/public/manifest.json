@@ -3,9 +3,9 @@
   "name": "SwiftResolwe",
   "icons": [
     {
-      "src": "favicon.svg",
-      "type": "image/svg+xml",
-      "sizes": "any"
+      "src": "favicon.ico",
+      "sizes": "16x16 32x32 48x48 64x64",
+      "type": "image/x-icon"
     },
     {
       "src": "favicon.png",
