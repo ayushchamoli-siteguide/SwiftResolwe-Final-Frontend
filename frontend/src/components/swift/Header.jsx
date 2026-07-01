@@ -85,7 +85,7 @@ export default function Header() {
     >
       <div className="max-w-7xl mx-auto px-5 sm:px-8 h-16 md:h-20 flex items-center justify-between gap-6">
         <Link to="/" className="group flex items-center" data-testid="brand-home-link">
-          <img src="/logo.webp" alt="SwiftResolwe" className="h-11 sm:h-14 w-auto" />
+          <img src="/logo.webp" alt="SwiftResolwe" className="h-14 w-auto" />
         </Link>
 
         <nav className="hidden lg:flex items-center gap-8" aria-label="Primary">
