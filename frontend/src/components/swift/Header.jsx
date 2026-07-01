@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Menu, X } from "lucide-react";
+import BrandGlyph from "./BrandGlyph";
 import { useSwift, APP_LOGIN_URL } from "./SwiftContext";
 
 const NAV = [
@@ -84,8 +85,12 @@ export default function Header() {
       }`}
     >
       <div className="max-w-7xl mx-auto px-5 sm:px-8 h-16 md:h-20 flex items-center justify-between gap-6">
-        <Link to="/" className="group flex items-center" data-testid="brand-home-link">
-          <img src="/logo.webp" alt="SwiftResolwe" className="h-14 w-auto" />
+        <Link to="/" className="group flex items-center gap-3" data-testid="brand-home-link">
+          <BrandGlyph size={34} />
+          <span className="font-display text-xl sm:text-[22px] font-semibold tracking-tight">
+            <span style={{ color: "var(--text-primary)" }}>Swift</span>
+            <span style={{ color: "var(--accent)" }}>Resolwe</span>
+          </span>
         </Link>
 
         <nav className="hidden lg:flex items-center gap-8" aria-label="Primary">

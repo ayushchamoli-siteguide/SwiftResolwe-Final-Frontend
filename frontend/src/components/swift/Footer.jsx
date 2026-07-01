@@ -1,4 +1,5 @@
 import React from "react";
+import BrandGlyph from "./BrandGlyph";
 import { useSwift } from "./SwiftContext";
 
 const COLS = [
@@ -39,8 +40,12 @@ export default function Footer() {
       <div style={{ background: "var(--bg-surface-2)" }} className="border-t border-[color:var(--border-soft)]">
         <div className="max-w-7xl mx-auto px-5 sm:px-8 py-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
           <div className="lg:col-span-1">
-            <div className="mb-5">
-              <img src="/logo.webp" alt="SwiftResolwe" className="h-8 w-auto" />
+            <div className="flex items-center gap-3 mb-5">
+              <BrandGlyph size={32} animate={false} />
+              <span className="font-display text-[22px] font-semibold">
+                <span style={{ color: "var(--text-primary)" }}>Swift</span>
+                <span style={{ color: "var(--accent)" }}>Resolwe</span>
+              </span>
             </div>
             <p className="text-[14px] leading-relaxed text-[color:var(--text-secondary)] max-w-xs">
               SwiftResolwe is India&apos;s premiere ODR 2.0 platform for resolving disputes quickly,
