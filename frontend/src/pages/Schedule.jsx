@@ -17,11 +17,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import DummyCheckoutModal from "@/components/swift/DummyCheckoutModal";
+// Payment is disabled for launch. Keep the checkout imports around (commented)
+// so a real gateway can be wired back in later.
+// import DummyCheckoutModal from "@/components/swift/DummyCheckoutModal";
 import {
   DISPUTE_CATEGORIES,
   useConsultationSlots,
   useCreateConsultationOrder,
+  useMockPayment,
 } from "@/hooks/useConsultation";
 
 const formSchema = z.object({
@@ -66,13 +69,15 @@ export default function Schedule() {
   const queryClient = useQueryClient();
   const [selectedDate, setSelectedDate] = useState(undefined);
   const [selectedSlot, setSelectedSlot] = useState(null);
-  const [order, setOrder] = useState(null);
-  const [checkoutOpen, setCheckoutOpen] = useState(false);
+  // Payment disabled for launch — checkout modal state kept for future use.
+  // const [order, setOrder] = useState(null);
+  // const [checkoutOpen, setCheckoutOpen] = useState(false);
   const [confirmed, setConfirmed] = useState(null);
 
   const dateKey = selectedDate ? toDateKey(selectedDate) : null;
   const slotsQuery = useConsultationSlots(dateKey);
   const createOrder = useCreateConsultationOrder();
+  const mockPay = useMockPayment();
 
   const {
     register,
@@ -112,8 +117,23 @@ export default function Schedule() {
         ...values,
         slotStart: selectedSlot,
       });
-      setOrder(created);
-      setCheckoutOpen(true);
+
+      // ── Payment step disabled for launch ──────────────────────────────
+      // Previously this opened the dummy checkout overlay:
+      //   setOrder(created);
+      //   setCheckoutOpen(true);
+      // For now we confirm the booking directly (no fee). To re-enable a
+      // real gateway later, restore the two lines above and drop the
+      // auto-confirm call below.
+      const result = await mockPay.mutateAsync({
+        orderId: created.orderId,
+        outcome: "success",
+      });
+      if (result.success) {
+        onPaymentSuccess(result.data);
+      } else {
+        toast.error(result.message || "Could not confirm the booking.");
+      }
     } catch (e) {
       toast.error(
         e?.response?.data?.message ||
@@ -123,7 +143,7 @@ export default function Schedule() {
   };
 
   const onPaymentSuccess = (data) => {
-    setCheckoutOpen(false);
+    // setCheckoutOpen(false);
     setConfirmed(data);
     toast.success("Consultation confirmed! Check your email for details.");
     // Free-up view: refetch availability so the booked slot disappears.
@@ -183,8 +203,8 @@ export default function Schedule() {
             Schedule a 30-min Consultation
           </h1>
           <p className="mt-4 text-[15.5px] text-[color:var(--text-secondary)] max-w-xl mx-auto">
-            Pick a time, share a few details, and confirm with a ₹250
-            consultation fee. Slots are 30 minutes, Mon–Fri.
+            Pick a time, share a few details, and confirm your slot. Slots are
+            30 minutes, Mon–Fri.
           </p>
         </div>
 
@@ -341,15 +361,15 @@ export default function Schedule() {
               <button
                 type="submit"
                 data-testid="pay-confirm-btn"
-                disabled={createOrder.isPending || !selectedSlot}
+                disabled={createOrder.isPending || mockPay.isPending || !selectedSlot}
                 className="cta-primary w-full px-5 py-3 rounded-xl text-[14px] font-semibold flex items-center justify-center gap-2 disabled:opacity-60"
               >
-                {createOrder.isPending ? (
+                {createOrder.isPending || mockPay.isPending ? (
                   <>
-                    <Loader2 size={16} className="animate-spin" /> Reserving…
+                    <Loader2 size={16} className="animate-spin" /> Confirming…
                   </>
                 ) : (
-                  <>Pay ₹250 &amp; Confirm</>
+                  <>Confirm</>
                 )}
               </button>
             </form>
@@ -357,12 +377,13 @@ export default function Schedule() {
         </div>
       </div>
 
+      {/* Payment disabled for launch. Re-enable for a real gateway:
       <DummyCheckoutModal
         open={checkoutOpen}
         order={order}
         onSuccess={onPaymentSuccess}
         onClose={() => setCheckoutOpen(false)}
-      />
+      /> */}
     </main>
   );
 }
